@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Pishi · Animals</title>
+<link rel="manifest" href="../manifest.webmanifest">
+<meta name="theme-color" content="#F4A63B">
+<link rel="apple-touch-icon" href="../icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body { height:100%; }
+  body { font-family:'Trebuchet MS',Tahoma,sans-serif; background:#FFF8EC; color:#333;
+    display:flex; flex-direction:column; -webkit-user-select:none; user-select:none; }
+  .fa { direction:rtl; }
+  #errbar { display:none; background:#C62828; color:#fff; font-size:12px; padding:6px 10px; direction:ltr; }
+
+  header { background:#F4A63B; color:#fff; padding:10px 16px; display:-webkit-flex; display:flex;
+    -webkit-align-items:center; align-items:center; }
+  header .t { font-size:20px; font-weight:bold; margin-left:10px; }
+  header .s { font-size:11.5px; opacity:.9; margin-left:auto; text-align:right; }
+
+  #main { -webkit-flex:1; flex:1; overflow-y:auto; padding:14px; }
+
+  nav { display:-webkit-flex; display:flex; background:#fff; border-top:1px solid #eee; }
+  nav button { -webkit-flex:1; flex:1; padding:10px 4px 12px; border:0; background:none; font-family:inherit;
+    font-size:13px; color:#999; }
+  nav button .ico { display:block; font-size:22px; }
+  nav button.on { color:#F4A63B; font-weight:bold; }
+
+  .grid { display:-webkit-flex; display:flex; -webkit-flex-wrap:wrap; flex-wrap:wrap; max-width:540px; margin:0 auto; }
+  .cardwrap { width:50%; padding:6px; }
+  .card { background:#fff; border-radius:18px; box-shadow:0 3px 10px rgba(0,0,0,.08);
+    text-align:center; padding:16px 8px 12px; position:relative; min-height:140px; }
+  .card:active { -webkit-transform:scale(.94); transform:scale(.94); }
+  .card.playing { outline:4px solid #F7B955; }
+  .card .w { font-size:21px; font-weight:bold; margin-top:6px; }
+  .card .spk { position:absolute; top:8px; right:10px; font-size:13px; opacity:.35; }
+  .card.correct { outline:4px solid #43A047; }
+  .card.wrong { outline:4px solid #E53935; }
+
+  .hint { text-align:center; color:#a89a80; font-size:13px; margin:0 0 12px; }
+  .gamebar { max-width:540px; margin:0 auto 12px; display:-webkit-flex; display:flex; }
+  .bigbtn { -webkit-flex:1; flex:1; background:#F4A63B; color:#fff; border:0; border-radius:14px; padding:14px;
+    font-size:17px; font-weight:bold; font-family:inherit; box-shadow:0 3px 0 #d78e26; margin:0 4px; }
+  .bigbtn:active { -webkit-transform:translateY(2px); transform:translateY(2px); box-shadow:none; }
+  .bigbtn.replay { -webkit-flex:0 0 auto; flex:0 0 auto; background:#fff; color:#F4A63B; border:2px solid #F4A63B; box-shadow:none; }
+  .bigbtn.slow { background:#8E6BB3; box-shadow:0 3px 0 #6d4f91; }
+  .stars { text-align:center; font-size:22px; min-height:30px; letter-spacing:3px; margin-bottom:8px; }
+  #cheer { position:fixed; top:0; left:0; right:0; bottom:0; display:none; text-align:center; font-size:80px;
+    padding-top:40%; pointer-events:none; z-index:9; }
+
+  .chantbox { background:#fff; border-radius:18px; box-shadow:0 3px 10px rgba(0,0,0,.08);
+    max-width:540px; margin:0 auto; padding:20px; }
+  .chantbox .line { margin-bottom:14px; font-size:16.5px; font-weight:bold; }
+  .chantbox .g { font-size:22px; display:inline-block; width:36px; text-align:center; }
+  .cr{color:#E53935}.cb{color:#1E88E5}.cg{color:#43A047}.cy{color:#F9A825}.co{color:#FB8C00}.cp{color:#8E24AA}
+  .chantbtns { display:-webkit-flex; display:flex; margin-top:10px; }
+</style>
+</head>
+<body>
+
+<div id="errbar"></div>
+
+<header>
+  <svg width="40" height="40" viewBox="0 0 200 200"><ellipse cx="100" cy="150" rx="46" ry="38" fill="#fff" opacity=".9"/><circle cx="100" cy="82" r="44" fill="#fff"/><path d="M66 52 L60 22 L88 42 Z" fill="#fff"/><path d="M134 52 L140 22 L112 42 Z" fill="#fff"/><circle cx="84" cy="78" r="7" fill="#F4A63B"/><circle cx="116" cy="78" r="7" fill="#F4A63B"/><path d="M96 92 q4 4 8 0" stroke="#F4A63B" stroke-width="4" fill="none"/></svg>
+  <div class="t">Pishi!</div>
+  <div class="s fa">هفتهٔ ۲ · حیوانات<br>بدون اینترنت کار می‌کند</div>
+</header>
+
+<!-- Cards are REAL HTML — visible even if every line of JavaScript fails. -->
+<div id="main">
+  <div id="view-cards">
+    <p class="hint fa">روی هر کارت بزن تا صدایش را بشنوی 🔊</p>
+    <div class="grid" id="cardgrid">
+      <div class="cardwrap"><div class="card" data-i="0"><span class="spk">🔊</span><svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- tail -->
+  <path d="M148 158 Q186 146 180 104 Q176 78 152 82" fill="none" stroke="#F4A63B" stroke-width="84" stroke-linecap="round"/>
+  <!-- body -->
+  <ellipse cx="100" cy="152" rx="48" ry="40" fill="#F4A63B"/>
+  <ellipse cx="100" cy="162" rx="25" ry="19" fill="#FCE3B8"/>
+  <!-- head -->
+  <circle cx="100" cy="82" r="46" fill="#F7B955"/>
+  <!-- ears -->
+  <path d="M64 50 L55 15 L92 42 Z" fill="#F7B955"/>
+  <path d="M136 50 L145 15 L108 42 Z" fill="#F7B955"/>
+  <path d="M68 46 L62 27 L84 42 Z" fill="#E8956B"/>
+  <path d="M132 46 L138 27 L116 42 Z" fill="#E8956B"/>
+  <!-- tabby stripes -->
+  <path d="M58 68 q10 -5 19 -1 M54 88 q12 -4 21 1" stroke="#E8956B" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M142 68 q-10 -5 -19 -1 M146 88 q-12 -4 -21 1" stroke="#E8956B" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <!-- eyes -->
+  <circle cx="82" cy="80" r="7" fill="#3b3b3b"/><circle cx="118" cy="80" r="7" fill="#3b3b3b"/>
+  <circle cx="84.5" cy="77.5" r="2.2" fill="#fff"/><circle cx="120.5" cy="77.5" r="2.2" fill="#fff"/>
+  <!-- nose + mouth -->
+  <ellipse cx="100" cy="90" rx="4.5" ry="3.2" fill="#E8956B"/>
+  <path d="M93 95 q7 6 14 0" stroke="#3b3b3b" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- whiskers -->
+  <line x1="50" y1="86" x2="24" y2="80" stroke="#c98a3f" stroke-width="2.2"/>
+  <line x1="50" y1="94" x2="24" y2="96" stroke="#c98a3f" stroke-width="2.2"/>
+  <line x1="150" y1="86" x2="176" y2="80" stroke="#c98a3f" stroke-width="2.2"/>
+  <line x1="150" y1="94" x2="176" y2="96" stroke="#c98a3f" stroke-width="2.2"/>
+</svg><div class="w">cat</div></div></div>
+      <div class="cardwrap"><div class="card" data-i="1"><span class="spk">🔊</span><svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- tail -->
+  <path d="M150 144 q30 -8 25 -34" stroke="#A5672E" stroke-width="84" fill="none" stroke-linecap="round"/>
+  <!-- body -->
+  <ellipse cx="100" cy="152" rx="48" ry="40" fill="#D9A66A"/>
+  <ellipse cx="100" cy="163" rx="25" ry="18" fill="#F3DDBB"/>
+  <!-- ears (floppy) -->
+  <path d="M62 66 q-24 8 -20 48 q20 6 28 -18 Z" fill="#A5672E"/>
+  <path d="M138 66 q24 8 20 48 q-20 6 -28 -18 Z" fill="#A5672E"/>
+  <!-- head -->
+  <circle cx="100" cy="82" r="44" fill="#D9A66A"/>
+  <!-- eyes -->
+  <circle cx="84" cy="78" r="7" fill="#3b3b3b"/><circle cx="116" cy="78" r="7" fill="#3b3b3b"/>
+  <circle cx="86.5" cy="75.5" r="2.2" fill="#fff"/><circle cx="118.5" cy="75.5" r="2.2" fill="#fff"/>
+  <!-- muzzle -->
+  <ellipse cx="100" cy="98" rx="20" ry="14" fill="#F3DDBB"/>
+  <ellipse cx="100" cy="92" rx="6.5" ry="5" fill="#3b3b3b"/>
+  <path d="M92 104 q8 7 16 0" stroke="#3b3b3b" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- tongue -->
+  <path d="M100 108 q3 12 -3 18 q7 3 10 -3 q2 -7 -7 -15 Z" fill="#F28FA0"/>
+</svg><div class="w">dog</div></div></div>
+      <div class="cardwrap"><div class="card" data-i="2"><span class="spk">🔊</span><svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- tail feathers -->
+  <path d="M60 128 L26 108 L34 138 L24 150 L64 146 Z" fill="#C62828"/>
+  <!-- body -->
+  <ellipse cx="102" cy="126" rx="52" ry="42" fill="#E53935"/>
+  <!-- wing -->
+  <path d="M92 100 q42 -8 46 42 q-32 8 -50 -12 Z" fill="#C62828"/>
+  <!-- belly -->
+  <ellipse cx="96" cy="152" rx="28" ry="18" fill="#FFCDD2"/>
+  <!-- head -->
+  <circle cx="148" cy="90" r="34" fill="#EF5350"/>
+  <!-- beak -->
+  <path d="M178 88 L200 94 L178 102 Z" fill="#FB8C00"/>
+  <!-- eye -->
+  <circle cx="160" cy="82" r="6" fill="#3b3b3b"/><circle cx="162.2" cy="79.5" r="2" fill="#fff"/>
+  <!-- feet -->
+  <path d="M90 166 l-6 14 M90 166 l6 14" stroke="#FB8C00" stroke-width="84" stroke-linecap="round"/>
+  <path d="M112 166 l-4 14 M112 166 l8 12" stroke="#FB8C00" stroke-width="4" stroke-linecap="round"/>
+</svg><div class="w">bird</div></div></div>
+      <div class="cardwrap"><div class="card" data-i="3"><span class="spk">🔊</span><svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- bubbles -->
+  <circle cx="22" cy="46" r="4" fill="#BBDEFB"/><circle cx="36" cy="30" r="6" fill="#BBDEFB"/>
+  <!-- tail -->
+  <path d="M48 100 L14 68 L16 132 Z" fill="#1565C0"/>
+  <!-- body -->
+  <ellipse cx="122" cy="102" rx="68" ry="46" fill="#1E88E5"/>
+  <!-- top fin -->
+  <path d="M104 58 q22 -24 42 -4 q-18 15 -42 4 Z" fill="#1565C0"/>
+  <!-- bottom fin -->
+  <path d="M104 146 q22 24 42 4 q-18 -15 -42 -4 Z" fill="#1565C0"/>
+  <!-- belly highlight -->
+  <ellipse cx="128" cy="118" rx="38" ry="16" fill="#90CAF9"/>
+  <!-- scale marks -->
+  <path d="M146 92 q8 8 0 16 M162 90 q8 8 0 16" stroke="#1565C0" stroke-width="84" fill="none"/>
+  <!-- eye -->
+  <circle cx="168" cy="88" r="9" fill="#fff"/><circle cx="170.5" cy="88" r="5" fill="#3b3b3b"/>
+  <!-- mouth -->
+  <path d="M186 100 q8 4 0 8" stroke="#0D47A1" stroke-width="3" fill="none" stroke-linecap="round"/>
+</svg><div class="w">fish</div></div></div>
+      <div class="cardwrap"><div class="card" data-i="4"><span class="spk">🔊</span><svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- ears -->
+  <ellipse cx="52" cy="76" rx="16" ry="10" fill="#F3DDBB" transform="rotate(-25 52 76)"/>
+  <ellipse cx="148" cy="76" rx="16" ry="10" fill="#F3DDBB" transform="rotate(25 148 76)"/>
+  <!-- horns -->
+  <path d="M78 46 q-6 -16 4 -22" stroke="#E0D8C8" stroke-width="84" fill="none" stroke-linecap="round"/>
+  <path d="M122 46 q6 -16 -4 -22" stroke="#E0D8C8" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <!-- body -->
+  <ellipse cx="100" cy="152" rx="54" ry="38" fill="#FFFDF7"/>
+  <ellipse cx="68" cy="142" rx="16" ry="20" fill="#3b3b3b"/>
+  <ellipse cx="132" cy="164" rx="20" ry="13" fill="#3b3b3b"/>
+  <!-- head -->
+  <ellipse cx="100" cy="90" rx="46" ry="42" fill="#FFFDF7"/>
+  <ellipse cx="70" cy="76" rx="13" ry="18" fill="#3b3b3b"/>
+  <!-- muzzle -->
+  <ellipse cx="100" cy="114" rx="30" ry="20" fill="#F6B6C6"/>
+  <ellipse cx="90" cy="114" rx="4" ry="6" fill="#C97C93"/><ellipse cx="110" cy="114" rx="4" ry="6" fill="#C97C93"/>
+  <!-- eyes -->
+  <circle cx="80" cy="86" r="7" fill="#3b3b3b"/><circle cx="120" cy="86" r="7" fill="#3b3b3b"/>
+  <circle cx="82.5" cy="83.5" r="2.2" fill="#fff"/><circle cx="122.5" cy="83.5" r="2.2" fill="#fff"/>
+</svg><div class="w">cow</div></div></div>
+      <div class="cardwrap"><div class="card" data-i="5"><span class="spk">🔊</span><svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- water ripple -->
+  <path d="M14 178 q20 -8 40 0 q20 8 40 0 q20 -8 40 0 q20 8 40 0" stroke="#B3E5FC" stroke-width="84" fill="none" stroke-linecap="round"/>
+  <!-- tail -->
+  <path d="M152 138 q20 -4 17 -22 q-14 6 -17 22 Z" fill="#FBC02D"/>
+  <!-- body -->
+  <ellipse cx="100" cy="138" rx="54" ry="36" fill="#FDD835"/>
+  <!-- wing -->
+  <path d="M78 118 q30 -6 34 30 q-24 8 -40 -10 Z" fill="#FBC02D"/>
+  <!-- head -->
+  <circle cx="132" cy="84" r="34" fill="#FDD835"/>
+  <!-- beak -->
+  <path d="M162 86 q26 -4 26 8 q0 12 -26 8 Z" fill="#FB8C00"/>
+  <!-- eye -->
+  <circle cx="142" cy="76" r="6" fill="#3b3b3b"/><circle cx="144.2" cy="73.7" r="2" fill="#fff"/>
+  <!-- feet -->
+  <path d="M84 172 l-10 10 M84 172 l4 12 M84 172 l14 8" stroke="#FB8C00" stroke-width="4" stroke-linecap="round"/>
+</svg><div class="w">duck</div></div></div>
+      <div class="cardwrap"><div class="card" data-i="6"><span class="spk">🔊</span><svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- back legs -->
+  <ellipse cx="38" cy="152" rx="22" ry="14" fill="#43A047" transform="rotate(-20 38 152)"/>
+  <ellipse cx="162" cy="152" rx="22" ry="14" fill="#43A047" transform="rotate(20 162 152)"/>
+  <!-- body -->
+  <ellipse cx="100" cy="130" rx="60" ry="44" fill="#66BB6A"/>
+  <!-- spots -->
+  <circle cx="68" cy="120" r="8" fill="#388E3C"/><circle cx="132" cy="128" r="10" fill="#388E3C"/>
+  <!-- belly -->
+  <ellipse cx="100" cy="152" rx="34" ry="17" fill="#E8F5E9"/>
+  <!-- eye bumps -->
+  <circle cx="72" cy="84" r="22" fill="#66BB6A"/><circle cx="128" cy="84" r="22" fill="#66BB6A"/>
+  <circle cx="72" cy="80" r="12" fill="#3b3b3b"/><circle cx="128" cy="80" r="12" fill="#3b3b3b"/>
+  <circle cx="75.5" cy="76" r="4" fill="#fff"/><circle cx="131.5" cy="76" r="4" fill="#fff"/>
+  <!-- mouth -->
+  <path d="M64 126 q36 18 72 0" stroke="#2E7D32" stroke-width="84" fill="none" stroke-linecap="round"/>
+  <!-- front feet -->
+  <path d="M54 170 l-8 10 M54 170 l0 12 M54 170 l8 10" stroke="#388E3C" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M146 170 l-8 10 M146 170 l0 12 M146 170 l8 10" stroke="#388E3C" stroke-width="3" fill="none" stroke-linecap="round"/>
+</svg><div class="w">frog</div></div></div>
+    </div>
+  </div>
+
+  <div id="view-game" style="display:none">
+    <p class="hint fa">صدا پخش می‌شود — روی کارتِ درست بزن!</p>
+    <div class="stars" id="stars"></div>
+    <div class="gamebar">
+      <button class="bigbtn" id="gostart"><span class="fa">شروع بازی</span> ▶</button>
+      <button class="bigbtn replay" id="gohear" style="display:none">🔊</button>
+    </div>
+    <div class="grid" id="gamegrid"></div>
+  </div>
+
+  <div id="view-chant" style="display:none">
+    <div class="chantbox">
+      <div class="line"><span class="g">🔎</span> What is it? What is it? Come and see!</div>
+      <div class="line"><span class="g">🐱🐶🐦</span> A cat, a dog, a bird — one, two, three!</div>
+      <div class="line"><span class="g">🐟🐄🦆</span> A fish, a cow, a duck, and a <span class="cg">green</span> frog,</div>
+      <div class="line"><span class="g">🐸</span> hopping and swimming — hello, hello!</div>
+      <div class="line"><span class="g">🐦</span> The <span class="cr">red</span> bird flies up in the sky,</div>
+      <div class="line"><span class="g">🐟</span> the <span class="cb">blue</span> fish swims — goodbye, goodbye!</div>
+      <div class="line"><span class="g">👏</span> Cat and dog and cow and duck,</div>
+      <div class="line"><span class="g">🍀</span> see you soon — good luck, good luck!</div>
+      <div class="chantbtns">
+        <button class="bigbtn" id="chantbtn">▶ <span class="fa">سرود</span></button>
+        <button class="bigbtn slow" id="chantslowbtn">🐢 <span class="fa">آهسته</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="cheer">🎉</div>
+
+<nav>
+  <button id="nb0" class="on"><span class="ico">🃏</span><span class="fa">کارت‌ها</span></button>
+  <button id="nb1"><span class="ico">🎯</span><span class="fa">بازی</span></button>
+  <button id="nb2"><span class="ico">🎵</span><span class="fa">سرود</span></button>
+</nav>
+
+<script>
+// visible error reporting — if anything breaks on her phone, she can screenshot this
+window.onerror = function(msg, src, line){
+  var b = document.getElementById('errbar');
+  if (b){ b.style.display = 'block'; b.textContent = 'error: ' + msg + ' @' + line; }
+  return false;
+};
+</script>
+
+<script>
+// ============ UI logic — ES5 only, no modern syntax ============
+(function(){
+  var KEYS = ['cat','dog','bird','fish','cow','duck','frog'];
+  var player = null;
+
+  function getAudio(key){
+    if (typeof AUDIO === 'undefined' || !AUDIO[key]) return null;
+    return AUDIO[key];
+  }
+  function play(key, onend){
+    var src = getAudio(key);
+    if (!src){ toast('صدا در این نسخه لود نشده'); return null; }
+    try {
+      if (player){ try{ player.pause(); }catch(e){} }
+      player = new Audio(src);
+      if (onend) player.onended = onend;
+      player.play();
+      return player;
+    } catch(e){ toast('پخش صدا ممکن نشد'); return null; }
+  }
+  function toast(t){
+    var b = document.getElementById('errbar');
+    b.style.display = 'block'; b.textContent = t;
+    setTimeout(function(){ b.style.display='none'; }, 2500);
+  }
+
+  // ---- tabs ----
+  var views = ['view-cards','view-game','view-chant'];
+  function go(t){
+    if (player){ try{ player.pause(); }catch(e){} }
+    for (var i=0;i<3;i++){
+      document.getElementById(views[i]).style.display = (i===t ? 'block' : 'none');
+      document.getElementById('nb'+i).className = (i===t ? 'on' : '');
+    }
+  }
+  document.getElementById('nb0').onclick = function(){ go(0); };
+  document.getElementById('nb1').onclick = function(){ go(1); buildGame(); };
+  document.getElementById('nb2').onclick = function(){ go(2); };
+
+  // ---- cards tab: attach tap handlers to the static cards ----
+  var cards = document.getElementById('cardgrid').getElementsByClassName('card');
+  function attachCard(el){
+    el.onclick = function(){
+      var i = parseInt(el.getAttribute('data-i'), 10);
+      for (var j=0;j<cards.length;j++) cards[j].className = 'card';
+      el.className = 'card playing';
+      var p = play(KEYS[i], function(){ el.className = 'card'; });
+      if (!p) el.className = 'card';
+    };
+  }
+  for (var i=0;i<cards.length;i++) attachCard(cards[i]);
+
+  // ---- game tab ----
+  var target = -1, score = 0, busy = false, built = false;
+  function buildGame(){
+    if (built) return;
+    built = true;
+    var g = document.getElementById('gamegrid');
+    g.innerHTML = document.getElementById('cardgrid').innerHTML; // clone the static cards
+    var gcards = g.getElementsByClassName('card');
+    function attach(el){
+      el.onclick = function(){ guess(parseInt(el.getAttribute('data-i'),10), el); };
+    }
+    for (var i=0;i<gcards.length;i++) attach(gcards[i]);
+  }
+  function newRound(){
+    var prev = target;
+    do { target = Math.floor(Math.random()*KEYS.length); } while (target === prev);
+    busy = false;
+    document.getElementById('gostart').getElementsByTagName('span')[0].textContent = 'بعدی';
+    document.getElementById('gohear').style.display = 'block';
+    hear();
+  }
+  function hear(){ if (target >= 0) play('short_' + KEYS[target]); }
+  function guess(i, el){
+    if (target < 0 || busy) return;
+    if (i === target){
+      busy = true; score++;
+      el.className = 'card correct';
+      document.getElementById('stars').textContent = starStr(score);
+      var ch = document.getElementById('cheer');
+      ch.style.display = 'block';
+      setTimeout(function(){ ch.style.display='none'; }, 700);
+      play(KEYS[i], function(){ el.className='card'; newRound(); });
+      setTimeout(function(){ if (busy){ el.className='card'; newRound(); } }, 4500);
+    } else {
+      el.className = 'card wrong';
+      setTimeout(function(){ el.className = 'card'; }, 450);
+      hear();
+    }
+  }
+  function starStr(n){
+    var s = ''; var m = n < 10 ? n : 10;
+    for (var i=0;i<m;i++) s += '⭐';
+    return s;
+  }
+  document.getElementById('gostart').onclick = newRound;
+  document.getElementById('gohear').onclick = hear;
+
+  // ---- chant tab ----
+  document.getElementById('chantbtn').onclick = function(){ play('chant'); };
+  document.getElementById('chantslowbtn').onclick = function(){ play('chantslow'); };
+})();
+</script>
+
+<!-- Audio payload LAST and isolated: if this block is truncated or fails to parse,
+     everything above still works (cards visible, UI alive, taps show a notice). -->
+<script>
+/*__AUDIO__*/
+</script>
+
+<script>if(navigator.serviceWorker){try{window.addEventListener("load",function(){navigator.serviceWorker.register("../sw.js",{scope:"../"}).catch(function(e){console.warn("sw",e)})})}catch(e){}}</script>
+</body>
+</html>

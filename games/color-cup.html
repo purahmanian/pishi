@@ -3,6 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="manifest" href="../manifest.webmanifest">
+<meta name="theme-color" content="#F4A63B">
+<link rel="apple-touch-icon" href="../icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <title>Color Cup · Pishi</title>
 <style>
   :root { --brand:#F4A63B; --red:#E53935; --blue:#1E88E5; --green:#43A047; --yellow:#FBC02D; --orange:#FB8C00; --purple:#8E24AA; }
@@ -145,6 +149,19 @@ function award(i){
 function nextRound(){ round++; if (round>=ROUNDS){ state='end'; render(); } else newWord(); }
 
 render();
+</script>
+<script>
+  if (navigator.serviceWorker) {
+    try {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('../sw.js', { scope: '../' }).catch((err) => {
+          console.warn('SW registration failed (scope likely rejected without Service-Worker-Allowed header):', err);
+        });
+      });
+    } catch (err) {
+      console.warn('SW registration skipped:', err);
+    }
+  }
 </script>
 </body>
 </html>

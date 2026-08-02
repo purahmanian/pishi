@@ -3,6 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="manifest" href="../manifest.webmanifest">
+<meta name="theme-color" content="#F4A63B">
+<link rel="apple-touch-icon" href="../icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <title>Pishi · English</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
@@ -257,5 +261,18 @@ var AUDIO = {
 };
 </script>
 
+<script>
+  if (navigator.serviceWorker) {
+    try {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('../sw.js', { scope: '../' }).catch((err) => {
+          console.warn('SW registration failed (scope likely rejected without Service-Worker-Allowed header):', err);
+        });
+      });
+    } catch (err) {
+      console.warn('SW registration skipped:', err);
+    }
+  }
+</script>
 </body>
 </html>

@@ -3,6 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="theme-color" content="#F4A63B">
+<link rel="apple-touch-icon" href="./icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <title>پیشی · بازی‌های انگلیسی</title>
 <style>
   :root { --brand:#F4A63B; }
@@ -59,6 +63,20 @@
   </div>
 
   <div class="game">
+    <div class="ico">🐱</div>
+    <div class="body">
+      <h2>هفتهٔ ۲ — حیوانات</h2>
+      <div class="en">Pishi Week 2 · Animals</div>
+      <p>هفت حیوان با کارت شنیداری، بازی «بشنو و بزن»، و سرود حیوانات — رنگ‌های هفتهٔ قبل هم مرور می‌شوند.</p>
+    </div>
+    <div class="btns">
+      <a class="play" href="games/pishi-week2.html">▶ بازی</a>
+      <a class="dl" href="games/pishi-week2.html" download>⬇ دانلود</a>
+      <div class="size">۰٫۸ مگابایت</div>
+    </div>
+  </div>
+
+  <div class="game">
     <div class="ico">🏆</div>
     <div class="body">
       <h2>جام رنگ‌ها — مسابقهٔ گروهی</h2>
@@ -77,5 +95,14 @@
   ساخته‌شده با 🧡 برای معلم‌های زبان · رایگان برای همیشه · کپی و پخشش آزاد است<br>
   اسم بچه‌ها را هیچ‌جا وارد نکنید — بازی‌ها عمداً اسم نمی‌پرسند.
 </footer>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch((err) => {
+        console.warn('SW registration failed:', err);
+      });
+    });
+  }
+</script>
 </body>
 </html>
