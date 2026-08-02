@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Color Cup · Pishi</title>
+<style>
+  :root { --brand:#F4A63B; --red:#E53935; --blue:#1E88E5; --green:#43A047; --yellow:#FBC02D; --orange:#FB8C00; --purple:#8E24AA; }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body { height:100%; }
+  body { font-family:'Trebuchet MS',Tahoma,sans-serif; background:#FFF8EC; color:#333;
+    display:flex; flex-direction:column; user-select:none; }
+  .fa { direction:rtl; }
+  header { background:var(--brand); color:#fff; padding:10px 16px; display:flex; align-items:center; gap:10px; }
+  header .t { font-size:19px; font-weight:bold; }
+  header .s { font-size:11px; opacity:.9; margin-inline-start:auto; }
+  main { flex:1; overflow-y:auto; padding:16px; max-width:560px; margin:0 auto; width:100%; }
+  .hint { text-align:center; color:#a89a80; font-size:14px; margin-bottom:14px; }
+  .bigbtn { width:100%; background:var(--brand); color:#fff; border:0; border-radius:14px; padding:15px;
+    font-size:18px; font-weight:bold; font-family:inherit; box-shadow:0 3px 0 #d78e26; margin-top:10px; }
+  .bigbtn:active { transform:translateY(2px); box-shadow:none; }
+  .bigbtn.alt { background:#8E6BB3; box-shadow:0 3px 0 #6d4f91; }
+  .teampick { display:flex; gap:10px; justify-content:center; margin:16px 0; }
+  .teampick button { font-size:26px; padding:12px 18px; border-radius:14px; border:3px solid #eee; background:#fff; }
+  .teampick button.on { border-color:var(--brand); background:#FFF3DC; }
+  /* scoreboard */
+  .board { display:flex; gap:10px; margin-bottom:14px; }
+  .team { flex:1; background:#fff; border-radius:16px; padding:10px 6px; text-align:center;
+    box-shadow:0 3px 10px rgba(0,0,0,.07); border:3px solid transparent; transition:transform .15s; }
+  .team .av { font-size:34px; }
+  .team .pts { font-size:26px; font-weight:bold; color:var(--brand); }
+  .team.won { animation:pop .5s; border-color:var(--green); }
+  @keyframes pop { 40% { transform:scale(1.12); } }
+  /* play area */
+  .word-stage { background:#fff; border-radius:18px; box-shadow:0 3px 10px rgba(0,0,0,.08);
+    padding:22px; text-align:center; margin-bottom:12px; }
+  .word-stage .big { font-size:30px; font-weight:bold; min-height:44px; letter-spacing:.5px; }
+  .word-stage .drop { height:90px; display:flex; justify-content:center; align-items:center; }
+  .roundnum { text-align:center; color:#a89a80; font-size:13px; margin-bottom:6px; }
+  .award { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+  .award button { font-size:30px; padding:14px; border-radius:14px; border:0; background:#fff;
+    box-shadow:0 3px 10px rgba(0,0,0,.08); font-family:inherit; }
+  .award button:active { transform:scale(.93); }
+  .award .lbl { display:block; font-size:12px; color:#999; margin-top:2px; }
+  .cheer { position:fixed; inset:0; display:none; align-items:center; justify-content:center; pointer-events:none; font-size:90px; z-index:9; }
+  .cheer.show { display:flex; animation:pop .7s; }
+  .winner { text-align:center; padding:30px 10px; }
+  .winner .cup { font-size:90px; }
+  .winner .av { font-size:60px; }
+  .winner h2 { font-size:26px; margin:8px 0; color:var(--brand); }
+</style>
+</head>
+<body>
+<header>
+  <svg width="34" height="34" viewBox="0 0 200 200"><circle cx="100" cy="82" r="44" fill="#fff"/><path d="M66 52 L60 22 L88 42 Z" fill="#fff"/><path d="M134 52 L140 22 L112 42 Z" fill="#fff"/><circle cx="84" cy="78" r="7" fill="#F4A63B"/><circle cx="116" cy="78" r="7" fill="#F4A63B"/><path d="M96 92 q4 4 8 0" stroke="#F4A63B" stroke-width="4" fill="none"/></svg>
+  <div class="t">Color Cup 🏆</div>
+  <div class="s fa">بازی گروهی کلاس · بدون اینترنت</div>
+</header>
+<main id="main">
+  <p class="hint fa">کلاس را گروه کن — هر گروه یک حیوان 🐾<br>صدا پخش می‌شود؛ هر گروهی که زودتر و درست گفت، معلم به همان گروه امتیاز می‌دهد.</p>
+  <div class="teampick"><button class="on">🐱🐰</button><button>🐱🐰🐼</button><button>🐱🐰🐼🦊</button></div>
+  <button class="bigbtn"><span class="fa">شروع بازی</span> ▶</button>
+  <p class="hint fa" style="margin-top:14px">اگر دکمه‌ها کار نکردند: فایل را در مرورگر (Chrome یا Safari) باز کن، نه در پیش‌نمایش.</p>
+</main>
+<div class="cheer" id="cheer">🎉</div>
+
+<script>
+/*__AUDIO__*/
+
+const WORDS = [
+  {k:'red',c:'var(--red)',hex:'#E53935'},{k:'blue',c:'var(--blue)',hex:'#1E88E5'},
+  {k:'green',c:'var(--green)',hex:'#43A047'},{k:'yellow',c:'#F9A825',hex:'#FBC02D'},
+  {k:'orange',c:'var(--orange)',hex:'#FB8C00'},{k:'purple',c:'var(--purple)',hex:'#8E24AA'},
+  {k:'hello',c:'#333'},{k:'goodbye',c:'#333'},
+];
+const AVATARS = ['🐱','🐰','🐼','🦊'];
+const ROUNDS = 10;
+
+let player = new Audio();
+function play(key, cb){ try{player.pause();}catch(e){} player = new Audio(AUDIO[key]); if(cb) player.onended=cb; player.play(); }
+
+let state = 'setup', nTeams = 2, scores = [], round = 0, cur = null, revealed = false;
+
+function drop(hex){ return '<svg width="80" height="80" viewBox="0 0 190 190"><path d="M95 20 C60 55 38 90 38 122 a57 57 0 0 0 114 0 C152 90 130 55 95 20 Z" fill="'+hex+'"/><ellipse cx="72" cy="118" rx="12" ry="18" fill="#ffffff55"/></svg>'; }
+
+function render(){
+  const m = document.getElementById('main');
+  if (state==='setup'){
+    m.innerHTML = '<p class="hint fa">کلاس را گروه کن — هر گروه یک حیوان 🐾<br>صدا پخش می‌شود؛ هر گروهی که زودتر و درست گفت، معلم به همان گروه امتیاز می‌دهد.</p>' +
+      '<div class="teampick">'+[2,3,4].map(n=>'<button class="'+(n===nTeams?'on':'')+'" onclick="nTeams='+n+';render()">'+AVATARS.slice(0,n).join('')+'</button>').join('')+'</div>' +
+      '<button class="bigbtn" onclick="startGame()"><span class="fa">شروع بازی</span> ▶</button>';
+  } else if (state==='play'){
+    const w = WORDS[cur];
+    m.innerHTML = '<div class="roundnum fa">دور '+(round+1)+' از '+ROUNDS+'</div>' +
+      '<div class="board">'+scores.map((s,i)=>'<div class="team" id="t'+i+'"><div class="av">'+AVATARS[i]+'</div><div class="pts">'+s+'</div></div>').join('')+'</div>' +
+      '<div class="word-stage">' +
+        (revealed
+          ? (w.hex?'<div class="drop">'+drop(w.hex)+'</div>':'<div class="drop" style="font-size:64px">'+(w.k==='hello'?'👋':'🧳')+'</div>')+'<div class="big" style="color:'+w.c+'">'+w.k+'</div>'
+          : '<div class="drop" style="font-size:64px">🔊</div><div class="big" style="color:#bbb">؟</div>') +
+        '<button class="bigbtn alt" onclick="hear()">🔊 <span class="fa">دوباره بشنو</span></button>' +
+        (revealed?'':'<button class="bigbtn" onclick="revealed=true;render()">👀 <span class="fa">نشان بده</span></button>') +
+      '</div>' +
+      '<p class="hint fa">کدام گروه درست گفت؟</p>' +
+      '<div class="award">'+scores.map((s,i)=>'<button onclick="award('+i+')">'+AVATARS[i]+'<span class="lbl fa">+۱ امتیاز</span></button>').join('')+'</div>' +
+      '<button class="bigbtn" style="background:#ccc;box-shadow:0 3px 0 #aaa" onclick="nextRound()"><span class="fa">هیچ‌کدام — بعدی</span></button>';
+  } else {
+    const mx = Math.max(...scores);
+    const winners = scores.map((s,i)=>s===mx?i:-1).filter(i=>i>=0);
+    m.innerHTML = '<div class="winner"><div class="cup">🏆</div>' +
+      '<div class="av">'+winners.map(i=>AVATARS[i]).join(' ')+'</div>' +
+      '<h2 class="fa">'+(winners.length>1?'مساوی شد!':'برنده شد!')+'</h2>' +
+      '<div class="board" style="margin-top:16px">'+scores.map((s,i)=>'<div class="team"><div class="av">'+AVATARS[i]+'</div><div class="pts">'+s+'</div></div>').join('')+'</div>' +
+      '<button class="bigbtn" onclick="startGame()"><span class="fa">دوباره!</span> 🔁</button>' +
+      '<button class="bigbtn alt" onclick="state=\'setup\';render()"><span class="fa">گروه‌بندی جدید</span></button></div>';
+  }
+}
+
+function startGame(){ scores = Array(nTeams).fill(0); round = 0; state='play'; newWord(); }
+function newWord(){ let p=cur; do { cur = Math.floor(Math.random()*WORDS.length); } while(cur===p); revealed=false; render(); hear(); }
+function hear(){ play('short_'+WORDS[cur].k); }
+function award(i){
+  scores[i]++;
+  const ch=document.getElementById('cheer'); ch.classList.add('show'); setTimeout(()=>ch.classList.remove('show'),650);
+  play(WORDS[cur].k);  // full track = the whole class hears it again correctly
+  document.getElementById('t'+i) && document.getElementById('t'+i).classList.add('won');
+  setTimeout(nextRound, 1400);
+}
+function nextRound(){ round++; if (round>=ROUNDS){ state='end'; render(); } else newWord(); }
+
+render();
+</script>
+</body>
+</html>
