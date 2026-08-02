@@ -16,6 +16,20 @@
   header h1 { font-size:26px; }
   header p { opacity:.92; font-size:14px; margin-top:6px; }
   main { max-width:640px; margin:0 auto; padding:18px; }
+
+  /* offline / install bar */
+  #pwabar { max-width:640px; margin:0 auto; padding:0 18px; }
+  .pwacard { background:#fff; border-radius:14px; padding:12px 14px; margin-top:14px;
+    box-shadow:0 2px 8px rgba(0,0,0,.05); font-size:13.5px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .pwacard .ic { font-size:22px; flex:none; }
+  .pwacard .tx { flex:1; min-width:150px; line-height:1.7; color:#666; }
+  .pwacard.ok { background:#F1F8F1; }
+  .pwacard.ok .tx { color:#2E7D32; font-weight:bold; }
+  .pwacard button { background:var(--brand); color:#fff; border:0; border-radius:10px;
+    padding:9px 16px; font-size:13.5px; font-weight:bold; font-family:inherit; }
+  .iossteps { background:#FFF8EC; border-radius:10px; padding:10px 12px; font-size:13px; line-height:2; color:#666; width:100%; }
+  .iossteps b { color:var(--brand); }
+
   .note { background:#fff; border-radius:14px; padding:14px 16px; font-size:13.5px; line-height:1.9;
     color:#777; margin-bottom:16px; box-shadow:0 2px 8px rgba(0,0,0,.05); }
   .note b { color:var(--brand); }
@@ -26,11 +40,11 @@
   .game h2 { font-size:17px; margin-bottom:3px; }
   .game .en { font-family:'Trebuchet MS'; direction:ltr; color:#bbb; font-size:12px; }
   .game p { font-size:13px; color:#888; line-height:1.8; margin-top:4px; }
-  .btns { display:flex; flex-direction:column; gap:8px; flex:none; }
-  .btns a { text-decoration:none; text-align:center; border-radius:10px; padding:9px 16px; font-size:13.5px; font-weight:bold; }
+  .btns { display:flex; flex-direction:column; gap:7px; flex:none; }
+  .btns a { text-decoration:none; text-align:center; border-radius:10px; padding:8px 14px; font-size:13px; font-weight:bold; }
   .play { background:var(--brand); color:#fff; }
-  .dl { background:#fff; color:var(--brand); border:2px solid var(--brand); }
-  .size { text-align:center; font-size:11px; color:#ccc; margin-top:3px; }
+  .print { background:#2E7D32; color:#fff; }
+  .dl { background:#fff; color:#999; border:1.5px solid #ddd; }
   footer { text-align:center; color:#c9bda9; font-size:12px; padding:20px; line-height:1.9; }
 </style>
 </head>
@@ -38,27 +52,30 @@
 <header>
   <div style="font-size:52px">🐱</div>
   <h1>پیشی — بازی‌های انگلیسی</h1>
-  <p>بازی‌های کوچک برای کلاس زبان بچه‌ها · با صدای گویندهٔ بومی</p>
+  <p>بازی و برگهٔ چاپی برای کلاس زبان بچه‌ها · با صدای گویندهٔ بومی</p>
 </header>
+
+<div id="pwabar"></div>
+
 <main>
 
   <div class="note">
-    <b>یک بار دانلود کن، برای همیشه بدون اینترنت کار می‌کند.</b>
-    هر بازی فقط یک فایل است — صدا و همه‌چیز داخل خودش. دکمهٔ «دانلود» را بزن، فایل را نگه دار،
-    و از داخل مرورگر بازش کن. می‌توانی همان فایل را در تلگرام یا بلوتوث برای همکارانت هم بفرستی.
+    <b>🖨 برگهٔ چاپی + 📱 بازی — هر هفته هر دو.</b>
+    دکمهٔ سبز «چاپ» فایل PDF کاملِ آن هفته را باز می‌کند (فلش‌کارت، تمرین، سرود، راهنمای معلم، یادداشت والدین) —
+    از مرورگر مستقیم چاپ بگیر. دکمهٔ نارنجی «بازی» نسخهٔ تعاملی با صداست. هر دو بدون اینترنت هم کار می‌کنند.
   </div>
 
   <div class="game">
     <div class="ico">🃏</div>
     <div class="body">
       <h2>هفتهٔ ۱ — سلام و رنگ‌ها</h2>
-      <div class="en">Pishi Week 1 · Hello &amp; Colors</div>
-      <p>کارت‌های شنیداری، بازی «بشنو و بزن»، و سرود — برای گوشی معلم سرِ کلاس یا تمرین در خانه.</p>
+      <div class="en">Week 1 · Hello &amp; Colors</div>
+      <p>hello, goodbye و شش رنگ. بازی «بشنو و بزن»، سرود، و ۵ برگهٔ چاپی.</p>
     </div>
     <div class="btns">
+      <a class="print" href="print/week1-colors-print.pdf" target="_blank">🖨 چاپ</a>
       <a class="play" href="games/pishi-week1.html">▶ بازی</a>
-      <a class="dl" href="games/pishi-week1.html" download>⬇ دانلود</a>
-      <div class="size">۰٫۹ مگابایت</div>
+      <a class="dl" href="games/pishi-week1.html" download>⬇ فایل</a>
     </div>
   </div>
 
@@ -66,13 +83,13 @@
     <div class="ico">🐱</div>
     <div class="body">
       <h2>هفتهٔ ۲ — حیوانات</h2>
-      <div class="en">Pishi Week 2 · Animals</div>
-      <p>هفت حیوان با کارت شنیداری، بازی «بشنو و بزن»، و سرود حیوانات — رنگ‌های هفتهٔ قبل هم مرور می‌شوند.</p>
+      <div class="en">Week 2 · Animals</div>
+      <p>هفت حیوان + مرور رنگ‌ها. بازی، سرود حیوانات، و ۵ برگهٔ چاپی.</p>
     </div>
     <div class="btns">
+      <a class="print" href="print/week2-animals-print.pdf" target="_blank">🖨 چاپ</a>
       <a class="play" href="games/pishi-week2.html">▶ بازی</a>
-      <a class="dl" href="games/pishi-week2.html" download>⬇ دانلود</a>
-      <div class="size">۰٫۸ مگابایت</div>
+      <a class="dl" href="games/pishi-week2.html" download>⬇ فایل</a>
     </div>
   </div>
 
@@ -81,12 +98,11 @@
     <div class="body">
       <h2>جام رنگ‌ها — مسابقهٔ گروهی</h2>
       <div class="en">Color Cup · team game</div>
-      <p>کلاس را ۲ تا ۴ گروه کن؛ صدا پخش می‌شود، هر گروهی زودتر درست بگوید امتیاز می‌گیرد. تابلوی امتیاز با حیوان‌ها.</p>
+      <p>کلاس را ۲ تا ۴ گروه کن؛ صدا پخش می‌شود، هر گروه زودتر درست بگوید امتیاز می‌گیرد.</p>
     </div>
     <div class="btns">
       <a class="play" href="games/color-cup.html">▶ بازی</a>
-      <a class="dl" href="games/color-cup.html" download>⬇ دانلود</a>
-      <div class="size">۰٫۴ مگابایت</div>
+      <a class="dl" href="games/color-cup.html" download>⬇ فایل</a>
     </div>
   </div>
 
@@ -95,14 +111,62 @@
   ساخته‌شده با 🧡 برای معلم‌های زبان · رایگان برای همیشه · کپی و پخشش آزاد است<br>
   اسم بچه‌ها را هیچ‌جا وارد نکنید — بازی‌ها عمداً اسم نمی‌پرسند.
 </footer>
+
 <script>
+  // register service worker
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js').catch((err) => {
-        console.warn('SW registration failed:', err);
-      });
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('./sw.js').catch(function (err) { console.warn('SW:', err); });
     });
   }
+
+  // ergonomic + transparent offline/install bar
+  (function () {
+    var bar = document.getElementById('pwabar');
+    function card(cls, ic, html) {
+      bar.innerHTML = '<div class="pwacard ' + cls + '"><span class="ic">' + ic + '</span><span class="tx">' + html + '</span></div>';
+      return bar.firstChild;
+    }
+    var standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+
+    if (standalone) { card('ok', '✓', 'نصب شده — بدون اینترنت هم باز می‌شود.'); return; }
+
+    function offlineState() {
+      return (navigator.serviceWorker && navigator.serviceWorker.controller)
+        ? '✓ روی گوشی ذخیره شد — حالا بدون اینترنت هم باز می‌شود.'
+        : 'در حال ذخیره برای استفادهٔ بدون اینترنت…';
+    }
+
+    var deferred = null;
+    window.addEventListener('beforeinstallprompt', function (e) {
+      e.preventDefault(); deferred = e;
+      var c = card('', '📲', '<b>نصب مثل یک برنامه</b><br><span class="s">' + offlineState() + '</span>');
+      var b = document.createElement('button'); b.textContent = 'نصب روی گوشی';
+      b.onclick = function () { deferred.prompt(); };
+      c.appendChild(b);
+    });
+
+    if (isIOS) {
+      var c = card('', '📲', '<b>می‌خواهی مثل یک برنامه روی صفحهٔ اصلی باشد؟</b><br><span class="s">' + offlineState() + '</span>');
+      var b = document.createElement('button'); b.textContent = 'چطور نصب کنم؟';
+      b.onclick = function () {
+        bar.querySelector('.pwacard').insertAdjacentHTML('beforeend',
+          '<div class="iossteps">۱) پایینِ Safari دکمهٔ <b>اشتراک‌گذاری</b> (مربع با فلش رو به بالا) را بزن.<br>۲) کمی پایین بیا و <b>«Add to Home Screen»</b> را بزن.<br>۳) <b>Add</b> را بزن. حالا آیکونِ پیشی روی صفحهٔ اصلی است و بدون اینترنت باز می‌شود.</div>');
+        b.style.display = 'none';
+      };
+      c.appendChild(b);
+    } else {
+      card('', '📶', offlineState());
+    }
+
+    if (navigator.serviceWorker) {
+      navigator.serviceWorker.ready.then(function () {
+        var s = bar.querySelector('.s') || (bar.querySelector('.tx') && !isIOS ? bar.querySelector('.tx') : null);
+        if (s) s.innerHTML = (s.className === 's' ? '' : '') + '✓ روی گوشی ذخیره شد — حالا بدون اینترنت هم باز می‌شود.';
+      });
+    }
+  })();
 </script>
 </body>
 </html>

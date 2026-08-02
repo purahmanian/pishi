@@ -1,73 +1,63 @@
-// Pishi service worker — offline cache for the static site.
-// Cache name is versioned; bump when app-shell contents change.
-const CACHE_NAME = 'pishi-v1';
-
-// Paths are relative to sw.js (repo root), so this works whether the
-// site is served from https://purahmanian.github.io/pishi/ or any
-// other subpath — never use root-absolute ('/') paths here.
-const APP_SHELL = [
-  './',
-  './index.html',
-  './manifest.webmanifest',
-  './icon.svg',
-  './games/pishi-week1.html',
-  './games/color-cup.html',
+// Pishi service worker — v2
+// Strategy chosen deliberately:
+//  - HTML pages: NETWORK-FIRST. Online → always the freshest version, so any update
+//    pushed to prod appears immediately. Offline → fall back to cache. This is what
+//    makes "every update goes straight to prod and she just sees it" true while still
+//    working during a blackout.
+//  - Other same-origin assets (pdf, icons): stale-while-revalidate.
+const CACHE = 'pishi-v2';
+const SHELL = [
+  './', './index.html', './manifest.webmanifest', './icon.svg', './icon.png',
+  './games/pishi-week1.html', './games/pishi-week2.html', './games/color-cup.html',
+  './print/week1-colors-print.pdf', './print/week2-animals-print.pdf'
 ];
 
-// Add each file individually and swallow failures per-file, so a single
-// missing asset (e.g. games/week2.html not existing yet) never aborts
-// the whole install.
-self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return Promise.allSettled(
-        APP_SHELL.map((url) =>
-          cache.add(url).catch((err) => {
-            console.warn('[sw] pre-cache skipped for', url, err);
-          })
-        )
-      );
-    }).then(() => self.skipWaiting())
-  );
+self.addEventListener('install', (e) => {
+  self.skipWaiting();
+  e.waitUntil((async () => {
+    const c = await caches.open(CACHE);
+    await Promise.allSettled(SHELL.map((u) => c.add(u)));
+  })());
 });
 
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((names) =>
-      Promise.all(
-        names
-          .filter((name) => name !== CACHE_NAME)
-          .map((name) => caches.delete(name))
-      )
-    ).then(() => self.clients.claim())
-  );
+self.addEventListener('activate', (e) => {
+  e.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)));
+    await self.clients.claim();
+  })());
 });
 
-// Cache-first, falling back to network; newly-fetched same-origin GET
-// responses are stashed in the cache so pages added later (e.g. a
-// future games/week2.html) get cached automatically on first visit.
-self.addEventListener('fetch', (event) => {
-  const request = event.request;
+self.addEventListener('fetch', (e) => {
+  const req = e.request;
+  if (req.method !== 'GET') return;
+  const url = new URL(req.url);
+  const sameOrigin = url.origin === location.origin;
+  const isHTML = req.mode === 'navigate' || req.destination === 'document' ||
+                 (req.headers.get('accept') || '').includes('text/html');
 
-  if (request.method !== 'GET') return;
+  if (isHTML) {
+    e.respondWith((async () => {
+      try {
+        const net = await fetch(req);
+        if (sameOrigin) { const c = await caches.open(CACHE); c.put(req, net.clone()); }
+        return net;
+      } catch (_) {
+        return (await caches.match(req)) || (await caches.match('./index.html')) ||
+               new Response('Offline', { status: 503, headers: { 'Content-Type': 'text/plain' } });
+      }
+    })());
+    return;
+  }
 
-  event.respondWith(
-    caches.match(request).then((cached) => {
-      if (cached) return cached;
-
-      return fetch(request)
-        .then((response) => {
-          if (
-            response &&
-            response.ok &&
-            new URL(request.url).origin === self.location.origin
-          ) {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
-          }
-          return response;
-        })
-        .catch(() => caches.match(request));
-    })
-  );
+  if (sameOrigin) {
+    e.respondWith((async () => {
+      const cached = await caches.match(req);
+      const network = fetch(req).then((net) => {
+        caches.open(CACHE).then((c) => c.put(req, net.clone()));
+        return net;
+      }).catch(() => null);
+      return cached || (await network) || fetch(req);
+    })());
+  }
 });
