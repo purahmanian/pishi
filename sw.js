@@ -5,11 +5,14 @@
 //    makes "every update goes straight to prod and she just sees it" true while still
 //    working during a blackout.
 //  - Other same-origin assets (pdf, icons): stale-while-revalidate.
-const CACHE = 'pishi-v2';
+const CACHE = 'pishi-v3';
 const SHELL = [
   './', './index.html', './manifest.webmanifest', './icon.svg', './icon.png',
-  './games/pishi-week1.html', './games/pishi-week2.html', './games/color-cup.html',
-  './print/week1-colors-print.pdf', './print/week2-animals-print.pdf'
+  './topics/colors.html', './topics/animals.html', './topics/numbers.html',
+  './topics/family.html', './topics/food.html', './topics/body.html',
+  './games/color-cup.html',
+  './print/colors-print.pdf', './print/animals-print.pdf', './print/numbers-print.pdf',
+  './print/family-print.pdf', './print/food-print.pdf', './print/body-print.pdf'
 ];
 
 self.addEventListener('install', (e) => {

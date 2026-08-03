@@ -7,52 +7,59 @@
 <meta name="theme-color" content="#F4A63B">
 <link rel="apple-touch-icon" href="./icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>پیشی · بازی‌های انگلیسی</title>
+<title>پیشی · انگلیسی برای بچه‌ها</title>
 <style>
-  :root { --brand:#F4A63B; }
+  :root { --brand:#F4A63B; --green:#2E7D32; }
   * { margin:0; padding:0; box-sizing:border-box; }
   body { font-family:Tahoma,'Trebuchet MS',sans-serif; background:#FFF8EC; color:#333; }
-  header { background:var(--brand); color:#fff; padding:26px 18px; text-align:center; }
-  header h1 { font-size:26px; }
-  header p { opacity:.92; font-size:14px; margin-top:6px; }
-  main { max-width:640px; margin:0 auto; padding:18px; }
+  header { background:var(--brand); color:#fff; padding:24px 18px 20px; text-align:center; }
+  header h1 { font-size:25px; }
+  header p { opacity:.92; font-size:13.5px; margin-top:6px; line-height:1.8; }
+  main { max-width:680px; margin:0 auto; padding:16px; }
 
-  /* offline / install bar */
-  #pwabar { max-width:640px; margin:0 auto; padding:0 18px; }
-  .pwacard { background:#fff; border-radius:14px; padding:12px 14px; margin-top:14px;
-    box-shadow:0 2px 8px rgba(0,0,0,.05); font-size:13.5px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
-  .pwacard .ic { font-size:22px; flex:none; }
+  #pwabar { max-width:680px; margin:0 auto; padding:0 16px; }
+  .pwacard { background:#fff; border-radius:14px; padding:11px 13px; margin-top:14px;
+    box-shadow:0 2px 8px rgba(0,0,0,.05); font-size:13px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .pwacard .ic { font-size:21px; flex:none; }
   .pwacard .tx { flex:1; min-width:150px; line-height:1.7; color:#666; }
-  .pwacard.ok { background:#F1F8F1; }
-  .pwacard.ok .tx { color:#2E7D32; font-weight:bold; }
+  .pwacard.ok { background:#F1F8F1; } .pwacard.ok .tx { color:var(--green); font-weight:bold; }
   .pwacard button { background:var(--brand); color:#fff; border:0; border-radius:10px;
-    padding:9px 16px; font-size:13.5px; font-weight:bold; font-family:inherit; }
-  .iossteps { background:#FFF8EC; border-radius:10px; padding:10px 12px; font-size:13px; line-height:2; color:#666; width:100%; }
+    padding:8px 14px; font-size:13px; font-weight:bold; font-family:inherit; }
+  .iossteps { background:#FFF8EC; border-radius:10px; padding:10px 12px; font-size:12.5px; line-height:2; color:#666; width:100%; }
   .iossteps b { color:var(--brand); }
 
-  .note { background:#fff; border-radius:14px; padding:14px 16px; font-size:13.5px; line-height:1.9;
-    color:#777; margin-bottom:16px; box-shadow:0 2px 8px rgba(0,0,0,.05); }
+  .note { background:#fff; border-radius:14px; padding:13px 15px; font-size:13px; line-height:1.9;
+    color:#777; margin:14px 0 18px; box-shadow:0 2px 8px rgba(0,0,0,.05); }
   .note b { color:var(--brand); }
-  .game { background:#fff; border-radius:18px; box-shadow:0 3px 10px rgba(0,0,0,.07);
-    padding:18px; margin-bottom:14px; display:flex; gap:14px; align-items:center; }
-  .game .ico { font-size:44px; flex:none; }
-  .game .body { flex:1; }
-  .game h2 { font-size:17px; margin-bottom:3px; }
-  .game .en { font-family:'Trebuchet MS'; direction:ltr; color:#bbb; font-size:12px; }
-  .game p { font-size:13px; color:#888; line-height:1.8; margin-top:4px; }
-  .btns { display:flex; flex-direction:column; gap:7px; flex:none; }
-  .btns a { text-decoration:none; text-align:center; border-radius:10px; padding:8px 14px; font-size:13px; font-weight:bold; }
+
+  h2.sec { font-size:15px; color:#b09a76; margin:22px 4px 10px; font-weight:normal; }
+
+  .topics { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  @media (max-width:420px){ .topics { grid-template-columns:1fr; } }
+  .topic { background:#fff; border-radius:18px; box-shadow:0 3px 10px rgba(0,0,0,.07);
+    padding:16px 14px 13px; display:flex; flex-direction:column; }
+  .topic .ico { font-size:38px; line-height:1; }
+  .topic h3 { font-size:17px; margin:7px 0 2px; }
+  .topic .en { font-family:'Trebuchet MS'; direction:ltr; color:#c4c4c4; font-size:11.5px; }
+  .topic .meta { font-size:12px; color:#999; line-height:1.75; margin:6px 0 11px; flex:1; }
+  .topic .words { font-family:'Trebuchet MS'; direction:ltr; color:#bbb; font-size:11px;
+    display:block; margin-top:3px; }
+  .row { display:flex; gap:7px; }
+  .row a { flex:1; text-decoration:none; text-align:center; border-radius:10px;
+    padding:9px 6px; font-size:13px; font-weight:bold; }
   .play { background:var(--brand); color:#fff; }
-  .print { background:#2E7D32; color:#fff; }
-  .dl { background:#fff; color:#999; border:1.5px solid #ddd; }
-  footer { text-align:center; color:#c9bda9; font-size:12px; padding:20px; line-height:1.9; }
+  .print { background:var(--green); color:#fff; }
+  .dl { background:#fff; color:#aaa; border:1.5px solid #e4e4e4; flex:0 0 46px; }
+
+  .wide { grid-column:1 / -1; }
+  footer { text-align:center; color:#c9bda9; font-size:12px; padding:22px 16px 28px; line-height:1.9; }
 </style>
 </head>
 <body>
 <header>
-  <div style="font-size:52px">🐱</div>
-  <h1>پیشی — بازی‌های انگلیسی</h1>
-  <p>بازی و برگهٔ چاپی برای کلاس زبان بچه‌ها · با صدای گویندهٔ بومی</p>
+  <div style="font-size:48px">🐱</div>
+  <h1>پیشی — انگلیسی برای بچه‌ها</h1>
+  <p>موضوع را انتخاب کن · برگهٔ چاپی و بازی برای هر موضوع<br>با صدای گویندهٔ بومی · بدون اینترنت هم کار می‌کند</p>
 </header>
 
 <div id="pwabar"></div>
@@ -60,81 +67,120 @@
 <main>
 
   <div class="note">
-    <b>🖨 برگهٔ چاپی + 📱 بازی — هر هفته هر دو.</b>
-    دکمهٔ سبز «چاپ» فایل PDF کاملِ آن هفته را باز می‌کند (فلش‌کارت، تمرین، سرود، راهنمای معلم، یادداشت والدین) —
-    از مرورگر مستقیم چاپ بگیر. دکمهٔ نارنجی «بازی» نسخهٔ تعاملی با صداست. هر دو بدون اینترنت هم کار می‌کنند.
+    <b>ترتیب خاصی ندارد.</b> هر موضوعی که این هفته درس می‌دهی را باز کن.
+    دکمهٔ سبز 🖨 فایل چاپیِ کامل آن موضوع است (فلش‌کارت، تمرین، سرود، راهنمای معلم، یادداشت والدین).
+    دکمهٔ نارنجی ▶ نسخهٔ تعاملی با صداست. ⬇ فایل را ذخیره می‌کند تا در تلگرام برای همکارانت بفرستی.
   </div>
 
-  <div class="game">
-    <div class="ico">🃏</div>
-    <div class="body">
-      <h2>هفتهٔ ۱ — سلام و رنگ‌ها</h2>
-      <div class="en">Week 1 · Hello &amp; Colors</div>
-      <p>hello, goodbye و شش رنگ. بازی «بشنو و بزن»، سرود، و ۵ برگهٔ چاپی.</p>
+  <h2 class="sec">موضوع‌ها</h2>
+  <div class="topics">
+
+    <div class="topic">
+      <div class="ico">🎨</div>
+      <h3>رنگ‌ها و سلام</h3>
+      <div class="en">Colors &amp; Greetings</div>
+      <div class="meta">۸ کلمه · جملهٔ ?What color is it
+        <span class="words">hello · goodbye · red · blue · green · yellow · orange · purple</span></div>
+      <div class="row">
+        <a class="print" href="print/colors-print.pdf" target="_blank">🖨 چاپ</a>
+        <a class="play" href="topics/colors.html">▶ بازی</a>
+        <a class="dl" href="topics/colors.html" download>⬇</a>
+      </div>
     </div>
-    <div class="btns">
-      <a class="print" href="print/week1-colors-print.pdf" target="_blank">🖨 چاپ</a>
-      <a class="play" href="games/pishi-week1.html">▶ بازی</a>
-      <a class="dl" href="games/pishi-week1.html" download>⬇ فایل</a>
+
+    <div class="topic">
+      <div class="ico">🦁</div>
+      <h3>حیوانات</h3>
+      <div class="en">Animals</div>
+      <div class="meta">۱۵ حیوان · خانه، مزرعه و باغ‌وحش · جملهٔ ?What is it
+        <span class="words">cat · dog · bird · fish · cow · duck · frog · rabbit · sheep · horse · monkey · elephant · lion · snake · spider</span></div>
+      <div class="row">
+        <a class="print" href="print/animals-print.pdf" target="_blank">🖨 چاپ</a>
+        <a class="play" href="topics/animals.html">▶ بازی</a>
+        <a class="dl" href="topics/animals.html" download>⬇</a>
+      </div>
     </div>
+
+    <div class="topic">
+      <div class="ico">🔢</div>
+      <h3>عددها</h3>
+      <div class="en">Numbers</div>
+      <div class="meta">۱۰ عدد · شمردن · جملهٔ ?How many
+        <span class="words">one · two · three · four · five · six · seven · eight · nine · ten</span></div>
+      <div class="row">
+        <a class="print" href="print/numbers-print.pdf" target="_blank">🖨 چاپ</a>
+        <a class="play" href="topics/numbers.html">▶ بازی</a>
+        <a class="dl" href="topics/numbers.html" download>⬇</a>
+      </div>
+    </div>
+
+    <div class="topic">
+      <div class="ico">👨‍👩‍👧</div>
+      <h3>خانواده</h3>
+      <div class="en">Family</div>
+      <div class="meta">۷ کلمه · کلمات هم‌ریشه با فارسی! · جملهٔ ?Who is it
+        <span class="words">mother · father · sister · brother · baby · grandmother · grandfather</span></div>
+      <div class="row">
+        <a class="print" href="print/family-print.pdf" target="_blank">🖨 چاپ</a>
+        <a class="play" href="topics/family.html">▶ بازی</a>
+        <a class="dl" href="topics/family.html" download>⬇</a>
+      </div>
+    </div>
+
+    <div class="topic">
+      <div class="ico">🍎</div>
+      <h3>خوراکی‌ها</h3>
+      <div class="en">Food</div>
+      <div class="meta">۸ خوراکی · «لطفاً» و «ممنون» · جملهٔ !I like
+        <span class="words">apple · bread · milk · water · rice · egg · banana · cheese</span></div>
+      <div class="row">
+        <a class="print" href="print/food-print.pdf" target="_blank">🖨 چاپ</a>
+        <a class="play" href="topics/food.html">▶ بازی</a>
+        <a class="dl" href="topics/food.html" download>⬇</a>
+      </div>
+    </div>
+
+    <div class="topic">
+      <div class="ico">🙋</div>
+      <h3>بدن من</h3>
+      <div class="en">My Body</div>
+      <div class="meta">۸ عضو بدن · همه با حرکت · جملهٔ !Touch your nose
+        <span class="words">head · hand · eye · nose · mouth · ear · foot · hair</span></div>
+      <div class="row">
+        <a class="print" href="print/body-print.pdf" target="_blank">🖨 چاپ</a>
+        <a class="play" href="topics/body.html">▶ بازی</a>
+        <a class="dl" href="topics/body.html" download>⬇</a>
+      </div>
+    </div>
+
   </div>
 
-  <div class="game">
-    <div class="ico">🐱</div>
-    <div class="body">
-      <h2>هفتهٔ ۲ — حیوانات</h2>
-      <div class="en">Week 2 · Animals</div>
-      <p>هفت حیوان + مرور رنگ‌ها. بازی، سرود حیوانات، و ۵ برگهٔ چاپی.</p>
-    </div>
-    <div class="btns">
-      <a class="print" href="print/week2-animals-print.pdf" target="_blank">🖨 چاپ</a>
-      <a class="play" href="games/pishi-week2.html">▶ بازی</a>
-      <a class="dl" href="games/pishi-week2.html" download>⬇ فایل</a>
-    </div>
-  </div>
-
-  <div class="game">
-    <div class="ico">🦁</div>
-    <div class="body">
-      <h2>هفتهٔ ۳ — حیوانات بیشتر</h2>
-      <div class="en">Week 3 · More Animals</div>
-      <p>هشت حیوانِ باغ‌وحش و مزرعه + مرور هفتهٔ قبل. سرودِ آهنگین، بازی، و ۵ برگهٔ چاپی.</p>
-    </div>
-    <div class="btns">
-      <a class="print" href="print/week3-more-animals-print.pdf" target="_blank">🖨 چاپ</a>
-      <a class="play" href="games/pishi-week3.html">▶ بازی</a>
-      <a class="dl" href="games/pishi-week3.html" download>⬇ فایل</a>
-    </div>
-  </div>
-
-  <div class="game">
-    <div class="ico">🏆</div>
-    <div class="body">
-      <h2>جام رنگ‌ها — مسابقهٔ گروهی</h2>
+  <h2 class="sec">بازی‌های گروهی</h2>
+  <div class="topics">
+    <div class="topic wide">
+      <div class="ico">🏆</div>
+      <h3>جام رنگ‌ها — مسابقهٔ گروهی</h3>
       <div class="en">Color Cup · team game</div>
-      <p>کلاس را ۲ تا ۴ گروه کن؛ صدا پخش می‌شود، هر گروه زودتر درست بگوید امتیاز می‌گیرد.</p>
-    </div>
-    <div class="btns">
-      <a class="play" href="games/color-cup.html">▶ بازی</a>
-      <a class="dl" href="games/color-cup.html" download>⬇ فایل</a>
+      <div class="meta">کلاس را ۲ تا ۴ گروه کن؛ صدا پخش می‌شود، هر گروه زودتر درست بگوید امتیاز می‌گیرد. تابلوی امتیاز با حیوان‌ها — بدون اسم بچه‌ها.</div>
+      <div class="row">
+        <a class="play" href="games/color-cup.html">▶ بازی</a>
+        <a class="dl" href="games/color-cup.html" download>⬇</a>
+      </div>
     </div>
   </div>
 
 </main>
 <footer>
-  ساخته‌شده با 🧡 برای معلم‌های زبان · رایگان برای همیشه · کپی و پخشش آزاد است<br>
-  اسم بچه‌ها را هیچ‌جا وارد نکنید — بازی‌ها عمداً اسم نمی‌پرسند.
+  ساخته‌شده با 🧡 برای معلم‌های زبان · رایگان برای همیشه · کپی و پخشش کاملاً آزاد است<br>
+  اسم بچه‌ها را هیچ‌جا وارد نکنید — بازی‌ها عمداً اسم نمی‌پرسند و هیچ اطلاعاتی ذخیره نمی‌کنند.
 </footer>
 
 <script>
-  // register service worker
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {
-      navigator.serviceWorker.register('./sw.js').catch(function (err) { console.warn('SW:', err); });
+      navigator.serviceWorker.register('./sw.js').catch(function (e) { console.warn('SW:', e); });
     });
   }
-
-  // ergonomic + transparent offline/install bar
   (function () {
     var bar = document.getElementById('pwabar');
     function card(cls, ic, html) {
@@ -143,41 +189,34 @@
     }
     var standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
     var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-
     if (standalone) { card('ok', '✓', 'نصب شده — بدون اینترنت هم باز می‌شود.'); return; }
-
-    function offlineState() {
+    function state() {
       return (navigator.serviceWorker && navigator.serviceWorker.controller)
         ? '✓ روی گوشی ذخیره شد — حالا بدون اینترنت هم باز می‌شود.'
         : 'در حال ذخیره برای استفادهٔ بدون اینترنت…';
     }
-
     var deferred = null;
     window.addEventListener('beforeinstallprompt', function (e) {
       e.preventDefault(); deferred = e;
-      var c = card('', '📲', '<b>نصب مثل یک برنامه</b><br><span class="s">' + offlineState() + '</span>');
+      var c = card('', '📲', '<b>نصب مثل یک برنامه</b><br><span class="s">' + state() + '</span>');
       var b = document.createElement('button'); b.textContent = 'نصب روی گوشی';
       b.onclick = function () { deferred.prompt(); };
       c.appendChild(b);
     });
-
     if (isIOS) {
-      var c = card('', '📲', '<b>می‌خواهی مثل یک برنامه روی صفحهٔ اصلی باشد؟</b><br><span class="s">' + offlineState() + '</span>');
+      var c = card('', '📲', '<b>می‌خواهی مثل یک برنامه روی صفحهٔ اصلی باشد؟</b><br><span class="s">' + state() + '</span>');
       var b = document.createElement('button'); b.textContent = 'چطور نصب کنم؟';
       b.onclick = function () {
         bar.querySelector('.pwacard').insertAdjacentHTML('beforeend',
-          '<div class="iossteps">۱) پایینِ Safari دکمهٔ <b>اشتراک‌گذاری</b> (مربع با فلش رو به بالا) را بزن.<br>۲) کمی پایین بیا و <b>«Add to Home Screen»</b> را بزن.<br>۳) <b>Add</b> را بزن. حالا آیکونِ پیشی روی صفحهٔ اصلی است و بدون اینترنت باز می‌شود.</div>');
+          '<div class="iossteps">۱) پایینِ Safari دکمهٔ <b>اشتراک‌گذاری</b> (مربع با فلش رو به بالا) را بزن.<br>۲) کمی پایین بیا و <b>«Add to Home Screen»</b> را بزن.<br>۳) <b>Add</b> را بزن. حالا آیکونِ پیشی روی صفحهٔ اصلی است.</div>');
         b.style.display = 'none';
       };
       c.appendChild(b);
-    } else {
-      card('', '📶', offlineState());
-    }
-
+    } else { card('', '📶', state()); }
     if (navigator.serviceWorker) {
       navigator.serviceWorker.ready.then(function () {
-        var s = bar.querySelector('.s') || (bar.querySelector('.tx') && !isIOS ? bar.querySelector('.tx') : null);
-        if (s) s.innerHTML = (s.className === 's' ? '' : '') + '✓ روی گوشی ذخیره شد — حالا بدون اینترنت هم باز می‌شود.';
+        var s = bar.querySelector('.s');
+        if (s) s.innerHTML = '✓ روی گوشی ذخیره شد — حالا بدون اینترنت هم باز می‌شود.';
       });
     }
   })();
