@@ -5,14 +5,14 @@
 //    makes "every update goes straight to prod and she just sees it" true while still
 //    working during a blackout.
 //  - Other same-origin assets (pdf, icons): stale-while-revalidate.
-const CACHE = 'pishi-v5';
+const CACHE = 'pishi-v6';
 const SHELL = [
   './', './index.html', './manifest.webmanifest', './icon.svg', './icon.png',
-  './topics/colors.html', './topics/animals.html', './topics/numbers.html',
+  './topics/greetings.html', './topics/colors.html', './topics/animals.html', './topics/numbers.html',
   './topics/family.html', './topics/food.html', './topics/body.html',
   './topics/clothes.html', './topics/weather.html', './topics/classroom.html',
   './topics/actions.html', './games/color-cup.html', './games/wordsearch.html', './games/crossword.html',
-  './print/colors-print.pdf', './print/animals-print.pdf', './print/numbers-print.pdf',
+  './print/greetings-print.pdf', './print/colors-print.pdf', './print/animals-print.pdf', './print/numbers-print.pdf',
   './print/family-print.pdf', './print/food-print.pdf', './print/body-print.pdf',
   './print/clothes-print.pdf', './print/weather-print.pdf',
   './print/classroom-print.pdf', './print/actions-print.pdf'
